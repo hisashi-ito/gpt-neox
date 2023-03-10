@@ -104,6 +104,11 @@ RUN python megatron/fused_kernels/setup.py install
 # Clear staging
 RUN mkdir -p /tmp && chmod 0777 /tmp
 
+### WORKDIR
+WORKDIR /data
+
 #### SWITCH TO mchorse USER
 USER mchorse
 WORKDIR /home/mchorse
+
+RUN git clone https://github.com/EleutherAI/gpt-neox.git
