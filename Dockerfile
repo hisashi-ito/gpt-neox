@@ -111,4 +111,4 @@ WORKDIR /data
 USER mchorse
 WORKDIR /home/mchorse
 
-RUN git clone https://github.com/EleutherAI/gpt-neox.git
+RUN git clone https://github.com/hisashi-ito/gpt-neox.git
