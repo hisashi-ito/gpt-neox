@@ -29,6 +29,33 @@ RUN apt-get update -y && \
     pip install --upgrade pip && \
     pip install gpustat
 
+
+RUN apt-get install -y --no-install-recommends \
+    gcc \
+    build-essential \
+    patch \
+    file \
+    git \
+    curl \
+    swig \
+    nkf \
+    libmecab-dev \
+    locales \
+    wget \
+    vim \
+    emacs \
+    unzip \
+    mlocate \
+    time
+
+RUN apt-get install --reinstall -y libnss3
+RUN apt-get install -y language-pack-ja-base language-pack-ja
+RUN locale-gen ja_JP.UTF-8
+RUN export echo "LANG=ja_JP.UTF-8" >> ~/.bashrc
+RUN export echo "LC_ALL=ja_JP.UTF-8" >> ~/.bashrc
+RUN export echo "PYTHONIOENCODING=utf-8" >> ~/.bashrc
+
+
 ### SSH
 # Set password
 ENV PASSWORD=password
