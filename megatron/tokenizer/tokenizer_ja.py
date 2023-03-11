@@ -15,7 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# 2023.03.10  
+# 2023.03.11
+# 日本語対応の場合は`HFTokenizer`を利用して動作させる。ただし、モデルの特殊key(eos, pad)が異なるのでそこのみ修正
 """Megatron tokenizers."""
 
 from abc import ABC
@@ -45,6 +46,7 @@ def build_tokenizer(args):
         assert args.vocab_file is not None
         tokenizer = SentencePieceTokenizer(args.vocab_file)
     elif args.tokenizer_type.lower() == "HFTokenizer".lower():
+        # 日本語利用の場合は`HFTokenizer`を利用
         assert args.vocab_file is not None
         tokenizer = HFTokenizer(args.vocab_file)
     elif args.tokenizer_type.lower() == "HFGPT2Tokenizer".lower():
@@ -58,10 +60,6 @@ def build_tokenizer(args):
     elif args.tokenizer_type.lower() == "TiktokenTokenizer".lower():
         assert args.vocab_file is not None
         tokenizer = TiktokenTokenizer(args.vocab_file)
-    # 2023.03.11 PreTrainedTokenizerFast を追加
-    elif args.tokenizer_type.lower() == "PreTrainedTokenizerFast".lower():
-        assert args.hf_tokenizer is not None
-        tokenizer = _PreTrainedTokenizerFast(args.hf_tokenizer)
     else:
         raise NotImplementedError(
             "{} tokenizer is not " "implemented.".format(args.tokenizer_type)
@@ -187,36 +185,6 @@ class _GPT2BPETokenizer(AbstractTokenizer):
     def eod(self):
         return self.eod_id
 
-class _PreTrainedTokenizerFast(AbstractTokenizer):
-    """PreTrainedTokenizerFast tokenizer."""
-
-    def __init__(self, hf_tokenizer):
-        name = "PreTrainedTokenizerFast"
-        super().__init__(name)
-        self.tokenizer = PreTrainedTokenizerFast.from_pretrained(hf_tokenizer)
-        self.eod_id = self.tokenizer.encoder["</s>"]
-
-    @property
-    def vocab_size(self):
-        return len(self.tokenizer.encoder)
-
-    @property
-    def vocab(self):
-        return self.tokenizer.encoder
-
-    @property
-    def inv_vocab(self):
-        return self.tokenizer.decoder
-
-    def tokenize(self, text):
-        return self.tokenizer.encode(text)
-
-    def detokenize(self, token_ids):
-        return self.tokenizer.decode(token_ids)
-
-    @property
-    def eod(self):
-        return self.eod_id 
 
 class SentencePieceTokenizer(AbstractTokenizer):
     """Designed to Integrate SP's Tokenizer."""
@@ -265,8 +233,13 @@ class HFTokenizer(AbstractTokenizer):
         super().__init__(name)
 
         self.tokenizer = Tokenizer.from_file(vocab_file)
-        self.eod_id = self.tokenizer.token_to_id("<|endoftext|>")
-        self.pad_id = self.tokenizer.token_to_id("<|padding|>")
+
+        # eos, pad のみ変更
+        # self.eod_id = self.tokenizer.token_to_id("<|endoftext|>")
+        # self.pad_id = self.tokenizer.token_to_id("<|padding|>")
+
+        self.eod_id = self.tokenizer.token_to_id("</s>")
+        self.pad_id = self.tokenizer.token_to_id("<pad>")
 
     @property
     def vocab_size(self):
