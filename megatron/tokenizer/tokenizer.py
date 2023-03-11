@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# 2023.03.11
+# 日本語対応の場合は`HFTokenizer`を利用して動作させる。ただし、モデルの特殊key(eos, pad)が異なるのでそこのみ修正
 """Megatron tokenizers."""
 
 from abc import ABC
@@ -22,6 +24,8 @@ from abc import abstractmethod
 
 from tokenizers import Tokenizer
 from transformers import GPT2Tokenizer, GPT2TokenizerFast
+from transformers import PreTrainedTokenizerFast
+
 import numpy as np
 import sentencepiece as spm
 from typing import List, Union
@@ -42,6 +46,7 @@ def build_tokenizer(args):
         assert args.vocab_file is not None
         tokenizer = SentencePieceTokenizer(args.vocab_file)
     elif args.tokenizer_type.lower() == "HFTokenizer".lower():
+        # 日本語利用の場合は`HFTokenizer`を利用
         assert args.vocab_file is not None
         tokenizer = HFTokenizer(args.vocab_file)
     elif args.tokenizer_type.lower() == "HFGPT2Tokenizer".lower():
@@ -59,7 +64,6 @@ def build_tokenizer(args):
         raise NotImplementedError(
             "{} tokenizer is not " "implemented.".format(args.tokenizer_type)
         )
-
     # Add vocab size.
     args.padded_vocab_size = _vocab_size_with_padding(tokenizer.vocab_size, args)
 
@@ -229,8 +233,13 @@ class HFTokenizer(AbstractTokenizer):
         super().__init__(name)
 
         self.tokenizer = Tokenizer.from_file(vocab_file)
-        self.eod_id = self.tokenizer.token_to_id("<|endoftext|>")
-        self.pad_id = self.tokenizer.token_to_id("<|padding|>")
+
+        # eos, pad のみ変更
+        # self.eod_id = self.tokenizer.token_to_id("<|endoftext|>")
+        # self.pad_id = self.tokenizer.token_to_id("<|padding|>")
+
+        self.eod_id = self.tokenizer.token_to_id("</s>")
+        self.pad_id = self.tokenizer.token_to_id("<pad>")
 
     @property
     def vocab_size(self):
