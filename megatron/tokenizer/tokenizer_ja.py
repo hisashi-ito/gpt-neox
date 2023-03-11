@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# 2023.03.10  
 """Megatron tokenizers."""
 
 from abc import ABC
@@ -57,17 +58,14 @@ def build_tokenizer(args):
     elif args.tokenizer_type.lower() == "TiktokenTokenizer".lower():
         assert args.vocab_file is not None
         tokenizer = TiktokenTokenizer(args.vocab_file)
-        
-    # 2023.03.11
+    # 2023.03.11 PreTrainedTokenizerFast を追加
     elif args.tokenizer_type.lower() == "PreTrainedTokenizerFast".lower():
-        assert args.hf_tokenizer is not None:
-        tokenizer = _PreTrainedTokenizerFast.from_pretrained(args.hf_tokenizer)
-        
+        assert args.hf_tokenizer is not None
+        tokenizer = _PreTrainedTokenizerFast(args.hf_tokenizer)
     else:
         raise NotImplementedError(
             "{} tokenizer is not " "implemented.".format(args.tokenizer_type)
         )
-
     # Add vocab size.
     args.padded_vocab_size = _vocab_size_with_padding(tokenizer.vocab_size, args)
 
@@ -195,7 +193,7 @@ class _PreTrainedTokenizerFast(AbstractTokenizer):
     def __init__(self, hf_tokenizer):
         name = "PreTrainedTokenizerFast"
         super().__init__(name)
-        self.tokenizer = PreTrainedTokenizerFast.from_pretrained(args.hf_tokenizer)
+        self.tokenizer = PreTrainedTokenizerFast.from_pretrained(hf_tokenizer)
         self.eod_id = self.tokenizer.encoder["</s>"]
 
     @property
