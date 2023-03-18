@@ -29,7 +29,6 @@ RUN apt-get update -y && \
     pip install --upgrade pip && \
     pip install gpustat
 
-
 RUN apt-get install -y --no-install-recommends \
     gcc \
     build-essential \
@@ -54,7 +53,6 @@ RUN locale-gen ja_JP.UTF-8
 RUN export echo "LANG=ja_JP.UTF-8" >> ~/.bashrc
 RUN export echo "LC_ALL=ja_JP.UTF-8" >> ~/.bashrc
 RUN export echo "PYTHONIOENCODING=utf-8" >> ~/.bashrc
-
 
 ### SSH
 # Set password

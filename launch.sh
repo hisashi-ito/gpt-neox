@@ -3,9 +3,11 @@ IMAGE="gpt-neox"
 CONTAINER="gpt-neox"
 sudo docker run -tid \
      --privileged \
-     --gpus all \
-     --shm-size=64gb \
      -v /data:/data \
-     -p 8888:8888 \
+     --network=host \
      --name ${CONTAINER} \
      ${IMAGE} /bin/bash
+
+# -p 8888:8888 \
+# --shm-size=64gb \
+# --network=host \
