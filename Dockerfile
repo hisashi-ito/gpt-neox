@@ -45,7 +45,8 @@ RUN apt-get install -y --no-install-recommends \
     emacs \
     unzip \
     mlocate \
-    time
+    time \
+    openssh-server
 
 RUN apt-get install --reinstall -y libnss3
 RUN apt-get install -y language-pack-ja-base language-pack-ja
@@ -137,3 +138,8 @@ USER mchorse
 WORKDIR /home/mchorse
 
 RUN git clone https://github.com/hisashi-ito/gpt-neox.git
+
+WORKDIR /job
+RUN echo 'Port 2222' >> /etc/ssh/sshd_config
+RUN echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
+EXPOSE 2222
