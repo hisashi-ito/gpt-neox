@@ -132,14 +132,19 @@ RUN mkdir -p /tmp && chmod 0777 /tmp
 
 ### WORKDIR
 WORKDIR /data
-
-RUN git clone https://github.com/hisashi-ito/gpt-neox.git
-
 WORKDIR /job
 RUN echo 'Port 2222' >> /etc/ssh/sshd_config
 RUN echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
 EXPOSE 2222
 
-#### SWITCH TO mchorse USER
-#USER mchorse
-#WORKDIR /home/mchorse
+WORKDIR /root/.ssh
+COPY ssh/id_rsa /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+COPY ssh/authorized_keys /root/.ssh/authorized_keys
+RUN chmod 644 /root/.ssh/authorized_keys
+COPY ssh/hostfile /job/hostfile
+COPY ssh/config /root/.ssh/config
+
+WORKDIR /root
+
+RUN git clone https://github.com/hisashi-ito/gpt-neox.git

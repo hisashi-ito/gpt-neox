@@ -1,16 +1,13 @@
-# Suggested data paths when using GPT-NeoX locally
 {
-  "data-path": "/home/mchorse/gpt-neox/data/train_text_document",
-  "vocab-file": "/data/exchange/gpt2-vocab.json",
-  "merge-file": "/data/exchange/gpt2-merges.txt",
-
+  "data-path": "/data/share/input/train_text_document",
+  "vocab-file": "/data/tokenizer/del_post_processor_tokenizer.json",
+  #"tokenizer_type": "HFTokenizer",
   "save": "checkpoints",
   "load": "checkpoints",
   "checkpoint_validation_with_forward_pass": False,
-
   "tensorboard-dir": "tensorboard",
   "log-dir": "logs",
-  "use_wandb": True,
+  "use_wandb": False,
   "wandb_host": "https://api.wandb.ai",
   "wandb_project": "gpt-neox"
 }

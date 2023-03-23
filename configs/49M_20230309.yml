@@ -88,4 +88,8 @@
   "log-interval": 10,
   "steps_per_print": 10,
   "wall_clock_breakdown": true,
+
+  # tokenizer  
+  "tokenizer_type": "HFTokenizer",
+  "vocab-file": "/data/tokenizer/del_post_processor_tokenizer.json"
 }
