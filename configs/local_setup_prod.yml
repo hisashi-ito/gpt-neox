@@ -1,0 +1,12 @@
+{
+  "data-path": "/mnt/localdisk/train/train_text_document",
+  "vocab-file": "/mnt/localdisk/tokenizer/del_post_processor_tokenizer.json",
+  "save": "checkpoints",
+  "load": "checkpoints",
+  "checkpoint_validation_with_forward_pass": False,
+  "tensorboard-dir": "tensorboard",
+  "log-dir": "logs",
+  "use_wandb": False,
+  "wandb_host": "https://api.wandb.ai",
+  "wandb_project": "gpt-neox"
+}

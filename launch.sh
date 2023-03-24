@@ -5,7 +5,8 @@ sudo docker run -tid \
      --privileged \
      --gpus all \
      -v /data:/data \
-     --shm-size=64gb \
+     -v /mnt/localdisk:/mnt/localdisk \
+     --shm-size=2000gb \
      --network=host \
      --name ${CONTAINER} \
      ${IMAGE} /bin/bash
