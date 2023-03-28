@@ -148,3 +148,4 @@ COPY ssh/config /root/.ssh/config
 WORKDIR /root
 
 RUN git clone https://github.com/hisashi-ito/gpt-neox.git
+RUN pip3 install best_download
