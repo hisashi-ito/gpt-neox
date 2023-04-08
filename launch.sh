@@ -1,12 +1,12 @@
 #! /bin/bash
 IMAGE="gpt-neox"
-CONTAINER="gpt-neox"
+CONTAINER="gpt-neox3"
 sudo docker run -tid \
      --privileged \
      --gpus all \
      -v /data:/data \
-     -v /mnt/localdisk:/mnt/localdisk \
-     --shm-size=2000gb \
+     -v /var/data:/var/data \
+     --shm-size=128gb \
      --network=host \
      --name ${CONTAINER} \
      ${IMAGE} /bin/bash
